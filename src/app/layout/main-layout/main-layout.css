@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 64px);
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  padding: 24px;
+  background: #f8f9fc;
+  overflow-y: auto;
+}
