@@ -62,3 +62,142 @@
   color: #1976d2;
   font-size: 20px;
 }
+.dashboard-sections {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.dashboard-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.card-header h2 {
+  margin: 0 0 5px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.view-all {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.priority-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.priority-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.priority-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.priority-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.critical {
+  background: #dc2626;
+}
+
+.high {
+  background: #ea580c;
+}
+
+.medium {
+  background: #ca8a04;
+}
+
+.low {
+  background: #16a34a;
+}
+
+.incident-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.incident-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 15px;
+}
+
+.incident-row:last-child {
+  border-bottom: none;
+}
+
+.incident-row div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.incident-row strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.incident-row span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px !important;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status.open {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.status.investigating {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status.resolved {
+  background: #dcfce7;
+  color: #166534;
+}

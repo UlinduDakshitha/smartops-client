@@ -43,4 +43,113 @@
 
   </div>
 
+  <div class="dashboard-sections">
+
+  <!-- Priority Overview -->
+  <div class="dashboard-card priority-card">
+
+    <div class="card-header">
+      <div>
+        <h2>Incident Priority</h2>
+        <p>Current incidents by priority</p>
+      </div>
+    </div>
+
+    <div class="priority-list">
+
+      <div class="priority-item">
+        <div class="priority-info">
+          <span class="priority-dot critical"></span>
+          <span>Critical</span>
+        </div>
+        <strong>8</strong>
+      </div>
+
+      <div class="priority-item">
+        <div class="priority-info">
+          <span class="priority-dot high"></span>
+          <span>High</span>
+        </div>
+        <strong>16</strong>
+      </div>
+
+      <div class="priority-item">
+        <div class="priority-info">
+          <span class="priority-dot medium"></span>
+          <span>Medium</span>
+        </div>
+        <strong>24</strong>
+      </div>
+
+      <div class="priority-item">
+        <div class="priority-info">
+          <span class="priority-dot low"></span>
+          <span>Low</span>
+        </div>
+        <strong>18</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Recent Incidents -->
+  <div class="dashboard-card recent-card">
+
+    <div class="card-header">
+      <div>
+        <h2>Recent Incidents</h2>
+        <p>Latest reported incidents</p>
+      </div>
+
+      <a routerLink="/incidents" class="view-all">
+        View all
+      </a>
+    </div>
+
+    <div class="incident-list">
+
+      <div class="incident-row">
+        <div>
+          <strong>Database connection failure</strong>
+          <span>INC-00124</span>
+        </div>
+
+        <span class="status open">Open</span>
+      </div>
+
+      <div class="incident-row">
+        <div>
+          <strong>API response timeout</strong>
+          <span>INC-00123</span>
+        </div>
+
+        <span class="status investigating">Investigating</span>
+      </div>
+
+      <div class="incident-row">
+        <div>
+          <strong>Authentication service error</strong>
+          <span>INC-00122</span>
+        </div>
+
+        <span class="status resolved">Resolved</span>
+      </div>
+
+      <div class="incident-row">
+        <div>
+          <strong>Server CPU usage high</strong>
+          <span>INC-00121</span>
+        </div>
+
+        <span class="status open">Open</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
 </div>
