@@ -1,0 +1,138 @@
+<div class="incidents-page">
+
+  <div class="page-header">
+
+    <div>
+      <h1>Incidents</h1>
+      <p>Monitor and manage IT incidents.</p>
+    </div>
+
+  <button
+  class="create-button"
+  type="button"
+  routerLink="/incidents/create"
+>
+  + Create Incident
+</button>
+
+  </div>
+
+  <div class="toolbar">
+
+    <div class="search-box">
+      <span>⌕</span>
+
+      <input
+        type="text"
+        placeholder="Search incidents..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+      />
+    </div>
+
+    <select
+      [ngModel]="selectedPriority()"
+      (ngModelChange)="selectedPriority.set($event)"
+    >
+      <option value="">All Priorities</option>
+      <option value="critical">Critical</option>
+      <option value="high">High</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+    </select>
+
+    <select
+      [ngModel]="selectedStatus()"
+      (ngModelChange)="selectedStatus.set($event)"
+    >
+      <option value="">All Statuses</option>
+      <option value="open">Open</option>
+      <option value="investigating">Investigating</option>
+      <option value="resolved">Resolved</option>
+      <option value="closed">Closed</option>
+    </select>
+
+    @if (selectedPriority() || selectedStatus() || searchTerm()) {
+      <button class="clear-filters-btn" type="button" (click)="clearFilters()">
+        Reset Filters
+      </button>
+    }
+
+  </div>
+
+  <div class="incidents-card">
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Incident</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Assignee</th>
+            <th>Created</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (incident of filteredIncidents(); track incident.id) {
+            <tr>
+              <td>
+                <div class="incident-title">
+                  {{ incident.title }}
+                </div>
+
+                <span class="incident-id">
+                  {{ incident.id }}
+                </span>
+              </td>
+
+              <td>
+                <span class="priority" [class]="incident.priority">
+                  {{ getPriorityLabel(incident.priority) }}
+                </span>
+              </td>
+
+              <td>
+                <span class="status" [class]="incident.status">
+                  {{ getStatusLabel(incident.status) }}
+                </span>
+              </td>
+
+              <td>{{ incident.assignee }}</td>
+
+              <td>{{ incident.createdAt }}</td>
+
+              <td>
+                <button class="action-button" type="button">
+                  View
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">
+                <div class="empty-message">
+                  <span>No incidents found</span>
+                  <p>No incidents match your current filter criteria.</p>
+                  <button class="action-button" type="button" (click)="clearFilters()">
+                    Clear Filters
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
