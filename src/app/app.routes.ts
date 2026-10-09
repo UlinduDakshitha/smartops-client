@@ -3,7 +3,7 @@ import { MainLayout } from './layout/main-layout/main-layout';
 import { Dashboard } from './features/dashboard/dashboard/dashboard';
 import { IncidentList } from './features/incidents/incident-list/incident-list';
 import { CreateIncident } from './features/incidents/create-incident/create-incident';
-
+ import { IncidentDetails } from './features/incidents/incident-details/incident-details';
 
 export const routes: Routes = [
   {
@@ -14,14 +14,18 @@ export const routes: Routes = [
         path: 'dashboard',
         component: Dashboard,
       },
-      {
-        path: 'incidents',
-        component: IncidentList,
-      },
-      {
-        path: 'incidents/create',
-        component: CreateIncident,
-      },
+       {
+  path: 'incidents/create',
+  component: CreateIncident,
+},
+{
+  path: 'incidents/:id',
+  component: IncidentDetails,
+},
+{
+  path: 'incidents',
+  component: IncidentList,
+},
     ],
   },
 ];

@@ -1,0 +1,133 @@
+```html
+<div class="incident-details-page">
+
+  <div class="page-header">
+    <div>
+      <a routerLink="/incidents" class="back-link">
+        ← Back to Incidents
+      </a>
+      <h1>Database connection failure</h1>
+      <p>INC-00124 · Reported on October 8, 2026</p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="secondary-button">
+        Edit Incident
+      </button>
+      <button type="button" class="primary-button">
+        Update Status
+      </button>
+    </div>
+  </div>
+
+  <div class="details-grid">
+
+    <section class="details-card main-details">
+      <h2>Incident Information</h2>
+
+      <div class="detail-item">
+        <label>Title</label>
+        <p>Database connection failure</p>
+      </div>
+
+      <div class="detail-item">
+        <label>Description</label>
+        <p>
+          The application cannot connect to the primary database.
+          Users are experiencing intermittent service disruptions.
+          The issue requires investigation by the responsible team.
+        </p>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-item">
+          <label>Priority</label>
+          <span class="priority critical">Critical</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Status</label>
+          <span class="status open">Open</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Category</label>
+          <p>Database</p>
+        </div>
+      </div>
+
+      <div class="detail-item">
+        <label>Created At</label>
+        <p>October 8, 2026 · 09:30 AM</p>
+      </div>
+    </section>
+
+    <section class="details-card assignment-card">
+      <h2>Assignment</h2>
+
+      <div class="detail-item">
+        <label>Assigned Team</label>
+        <p>DevOps Team</p>
+      </div>
+
+      <div class="detail-item">
+        <label>Assigned To</label>
+        <p>John Silva</p>
+      </div>
+
+      <div class="detail-item">
+        <label>Reported By</label>
+        <p>Ulindu</p>
+      </div>
+
+      <div class="detail-item">
+        <label>SLA Status</label>
+        <span class="sla-status">Within SLA</span>
+      </div>
+    </section>
+
+    <section class="details-card comments-card">
+      <h2>Activity & Comments</h2>
+
+      <div class="comment">
+        <div class="comment-avatar">J</div>
+        <div class="comment-content">
+          <div class="comment-heading">
+            <strong>John Silva</strong>
+            <span>Today, 09:45 AM</span>
+          </div>
+          <p>
+            Investigating the database connectivity issue.
+            Checking the connection pool and server logs.
+          </p>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="comment-avatar">U</div>
+        <div class="comment-content">
+          <div class="comment-heading">
+            <strong>Ulindu</strong>
+            <span>Today, 09:30 AM</span>
+          </div>
+          <p>Incident reported and assigned for investigation.</p>
+        </div>
+      </div>
+
+      <div class="comment-form">
+        <label for="comment">Add a comment</label>
+        <textarea
+          id="comment"
+          rows="3"
+          placeholder="Write an update..."
+        ></textarea>
+        <button type="button" class="primary-button">
+          Add Comment
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+</div>
+```

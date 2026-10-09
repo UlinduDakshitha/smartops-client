@@ -108,9 +108,13 @@
               <td>{{ incident.createdAt }}</td>
 
               <td>
-                <button class="action-button" type="button">
-                  View
-                </button>
+                 <button
+  class="action-button"
+  type="button"
+  [routerLink]="['/incidents', 'INC-00124']"
+>
+  View
+</button>
               </td>
             </tr>
           } @empty {
