@@ -1,20 +1,19 @@
-```html
 <div class="incident-details-page">
 
   <div class="page-header">
     <div>
-      <a routerLink="/incidents" class="back-link">
+      <a routerLink="/incidents" (click)="goBack($event)" class="back-link">
         ← Back to Incidents
       </a>
-      <h1>Database connection failure</h1>
-      <p>INC-00124 · Reported on October 8, 2026</p>
+      <h1>{{ incident()?.title || 'Incident Details' }}</h1>
+      <p>{{ incident()?.id }} · Reported on {{ incident()?.createdAt }}</p>
     </div>
 
     <div class="header-actions">
-      <button type="button" class="secondary-button">
+      <button type="button" class="secondary-button" (click)="openEditModal()">
         Edit Incident
       </button>
-      <button type="button" class="primary-button">
+      <button type="button" class="primary-button" (click)="openStatusModal()">
         Update Status
       </button>
     </div>
@@ -27,38 +26,38 @@
 
       <div class="detail-item">
         <label>Title</label>
-        <p>Database connection failure</p>
+        <p>{{ incident()?.title }}</p>
       </div>
 
       <div class="detail-item">
         <label>Description</label>
-        <p>
-          The application cannot connect to the primary database.
-          Users are experiencing intermittent service disruptions.
-          The issue requires investigation by the responsible team.
-        </p>
+        <p>{{ incident()?.description || 'No description provided.' }}</p>
       </div>
 
       <div class="detail-row">
         <div class="detail-item">
           <label>Priority</label>
-          <span class="priority critical">Critical</span>
+          <span class="priority" [class]="incident()?.priority">
+            {{ getPriorityLabel(incident()?.priority) }}
+          </span>
         </div>
 
         <div class="detail-item">
           <label>Status</label>
-          <span class="status open">Open</span>
+          <span class="status" [class]="incident()?.status">
+            {{ getStatusLabel(incident()?.status) }}
+          </span>
         </div>
 
         <div class="detail-item">
           <label>Category</label>
-          <p>Database</p>
+          <p>{{ incident()?.category || 'General' }}</p>
         </div>
       </div>
 
       <div class="detail-item">
         <label>Created At</label>
-        <p>October 8, 2026 · 09:30 AM</p>
+        <p>{{ incident()?.createdAt }}</p>
       </div>
     </section>
 
@@ -67,52 +66,42 @@
 
       <div class="detail-item">
         <label>Assigned Team</label>
-        <p>DevOps Team</p>
+        <p>{{ incident()?.assignedTeam || 'Unassigned' }}</p>
       </div>
 
       <div class="detail-item">
         <label>Assigned To</label>
-        <p>John Silva</p>
+        <p>{{ incident()?.assignee || 'Unassigned' }}</p>
       </div>
 
       <div class="detail-item">
         <label>Reported By</label>
-        <p>Ulindu</p>
+        <p>{{ incident()?.reportedBy || 'Ulindu' }}</p>
       </div>
 
       <div class="detail-item">
         <label>SLA Status</label>
-        <span class="sla-status">Within SLA</span>
+        <span class="sla-status">{{ incident()?.slaStatus || 'Within SLA' }}</span>
       </div>
     </section>
 
     <section class="details-card comments-card">
       <h2>Activity & Comments</h2>
 
-      <div class="comment">
-        <div class="comment-avatar">J</div>
-        <div class="comment-content">
-          <div class="comment-heading">
-            <strong>John Silva</strong>
-            <span>Today, 09:45 AM</span>
+      @for (comment of incident()?.comments; track comment.id) {
+        <div class="comment">
+          <div class="comment-avatar">{{ comment.authorInitial }}</div>
+          <div class="comment-content">
+            <div class="comment-heading">
+              <strong>{{ comment.author }}</strong>
+              <span>{{ comment.timestamp }}</span>
+            </div>
+            <p>{{ comment.content }}</p>
           </div>
-          <p>
-            Investigating the database connectivity issue.
-            Checking the connection pool and server logs.
-          </p>
         </div>
-      </div>
-
-      <div class="comment">
-        <div class="comment-avatar">U</div>
-        <div class="comment-content">
-          <div class="comment-heading">
-            <strong>Ulindu</strong>
-            <span>Today, 09:30 AM</span>
-          </div>
-          <p>Incident reported and assigned for investigation.</p>
-        </div>
-      </div>
+      } @empty {
+        <p class="empty-comment-text">No comments yet. Be the first to add an update.</p>
+      }
 
       <div class="comment-form">
         <label for="comment">Add a comment</label>
@@ -120,8 +109,15 @@
           id="comment"
           rows="3"
           placeholder="Write an update..."
+          [ngModel]="newCommentText()"
+          (ngModelChange)="newCommentText.set($event)"
         ></textarea>
-        <button type="button" class="primary-button">
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="!newCommentText().trim()"
+          (click)="addComment()"
+        >
           Add Comment
         </button>
       </div>
@@ -130,4 +126,222 @@
   </div>
 
 </div>
-```
+
+<!-- Edit Incident Modal -->
+@if (isEditModalOpen()) {
+  <div class="modal-backdrop" (click)="closeEditModal()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Edit Incident ({{ incident()?.id }})</h3>
+        <button type="button" class="close-btn" (click)="closeEditModal()">&times;</button>
+      </div>
+      <form (ngSubmit)="saveEdit()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit-title">Incident Title</label>
+            <input
+              id="edit-title"
+              type="text"
+              class="form-control"
+              [ngModel]="editTitle()"
+              (ngModelChange)="editTitle.set($event)"
+              name="title"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-priority">Priority</label>
+              <select
+                id="edit-priority"
+                class="form-control"
+                [ngModel]="editPriority()"
+                (ngModelChange)="editPriority.set($event)"
+                name="priority"
+              >
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-category">Category</label>
+              <select
+                id="edit-category"
+                class="form-control"
+                [ngModel]="editCategory()"
+                (ngModelChange)="editCategory.set($event)"
+                name="category"
+              >
+                <option value="Database">Database</option>
+                <option value="Application">Application</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Network">Network</option>
+                <option value="Security">Security</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-team">Assigned Team</label>
+              <select
+                id="edit-team"
+                class="form-control"
+                [ngModel]="editAssignedTeam()"
+                (ngModelChange)="editAssignedTeam.set($event)"
+                name="team"
+              >
+                <option value="DevOps Team">DevOps Team</option>
+                <option value="Backend Team">Backend Team</option>
+                <option value="Support Team">Support Team</option>
+                <option value="Security Team">Security Team</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-assignee">Assignee</label>
+              <input
+                id="edit-assignee"
+                type="text"
+                class="form-control"
+                [ngModel]="editAssignee()"
+                (ngModelChange)="editAssignee.set($event)"
+                name="assignee"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-description">Description</label>
+            <textarea
+              id="edit-description"
+              class="form-control"
+              rows="4"
+              [ngModel]="editDescription()"
+              (ngModelChange)="editDescription.set($event)"
+              name="description"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="secondary-button" (click)="closeEditModal()">
+            Cancel
+          </button>
+          <button type="submit" class="primary-button">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Update Status Modal -->
+@if (isStatusModalOpen()) {
+  <div class="modal-backdrop" (click)="closeStatusModal()">
+    <div class="modal-dialog modal-dialog-sm" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Update Status ({{ incident()?.id }})</h3>
+        <button type="button" class="close-btn" (click)="closeStatusModal()">&times;</button>
+      </div>
+      <form (ngSubmit)="saveStatus()">
+        <div class="modal-body">
+          <div class="current-status-banner">
+            <span>Current Status:</span>
+            <span class="status" [class]="incident()?.status">
+              {{ getStatusLabel(incident()?.status) }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label>Select New Status</label>
+            <div class="status-options-grid">
+              <label
+                class="status-option"
+                [class.selected]="selectedNewStatus() === 'open'"
+                (click)="selectedNewStatus.set('open')"
+              >
+                <input
+                  type="radio"
+                  name="status"
+                  value="open"
+                  [checked]="selectedNewStatus() === 'open'"
+                />
+                <span class="status open">Open</span>
+              </label>
+
+              <label
+                class="status-option"
+                [class.selected]="selectedNewStatus() === 'investigating'"
+                (click)="selectedNewStatus.set('investigating')"
+              >
+                <input
+                  type="radio"
+                  name="status"
+                  value="investigating"
+                  [checked]="selectedNewStatus() === 'investigating'"
+                />
+                <span class="status investigating">Investigating</span>
+              </label>
+
+              <label
+                class="status-option"
+                [class.selected]="selectedNewStatus() === 'resolved'"
+                (click)="selectedNewStatus.set('resolved')"
+              >
+                <input
+                  type="radio"
+                  name="status"
+                  value="resolved"
+                  [checked]="selectedNewStatus() === 'resolved'"
+                />
+                <span class="status resolved">Resolved</span>
+              </label>
+
+              <label
+                class="status-option"
+                [class.selected]="selectedNewStatus() === 'closed'"
+                (click)="selectedNewStatus.set('closed')"
+              >
+                <input
+                  type="radio"
+                  name="status"
+                  value="closed"
+                  [checked]="selectedNewStatus() === 'closed'"
+                />
+                <span class="status closed">Closed</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="status-note">Status Note / Update Reason (optional)</label>
+            <textarea
+              id="status-note"
+              class="form-control"
+              rows="3"
+              placeholder="e.g. Root cause identified, deployment finished..."
+              [ngModel]="statusNote()"
+              (ngModelChange)="statusNote.set($event)"
+              name="statusNote"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="secondary-button" (click)="closeStatusModal()">
+            Cancel
+          </button>
+          <button type="submit" class="primary-button">
+            Update Status
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

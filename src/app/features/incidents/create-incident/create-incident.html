@@ -1,4 +1,4 @@
- <div class="create-incident-page">
+<div class="create-incident-page">
 
   <div class="page-header">
     <div>
@@ -9,7 +9,7 @@
 
   <div class="form-card">
 
-    <form>
+    <form (ngSubmit)="onSubmit()">
 
       <div class="form-section">
 
@@ -22,16 +22,24 @@
 
             <input
               id="title"
+              name="title"
               type="text"
               placeholder="Enter incident title"
+              [ngModel]="title()"
+              (ngModelChange)="title.set($event)"
+              required
             />
           </div>
 
           <div class="form-group">
             <label for="priority">Priority</label>
 
-            <select id="priority">
-              <option value="">Select priority</option>
+            <select
+              id="priority"
+              name="priority"
+              [ngModel]="priority()"
+              (ngModelChange)="priority.set($event)"
+            >
               <option value="critical">Critical</option>
               <option value="high">High</option>
               <option value="medium">Medium</option>
@@ -42,8 +50,12 @@
           <div class="form-group">
             <label for="category">Category</label>
 
-            <select id="category">
-              <option value="">Select category</option>
+            <select
+              id="category"
+              name="category"
+              [ngModel]="category()"
+              (ngModelChange)="category.set($event)"
+            >
               <option value="infrastructure">Infrastructure</option>
               <option value="application">Application</option>
               <option value="network">Network</option>
@@ -57,8 +69,11 @@
 
             <textarea
               id="description"
+              name="description"
               rows="6"
               placeholder="Describe the incident..."
+              [ngModel]="description()"
+              (ngModelChange)="description.set($event)"
             ></textarea>
           </div>
 
@@ -75,8 +90,12 @@
           <div class="form-group">
             <label for="team">Assign Team</label>
 
-            <select id="team">
-              <option value="">Select team</option>
+            <select
+              id="team"
+              name="team"
+              [ngModel]="team()"
+              (ngModelChange)="team.set($event)"
+            >
               <option value="support">Support Team</option>
               <option value="devops">DevOps Team</option>
               <option value="security">Security Team</option>
@@ -86,8 +105,12 @@
           <div class="form-group">
             <label for="assignee">Assign To</label>
 
-            <select id="assignee">
-              <option value="">Select assignee</option>
+            <select
+              id="assignee"
+              name="assignee"
+              [ngModel]="assignee()"
+              (ngModelChange)="assignee.set($event)"
+            >
               <option value="john">John Silva</option>
               <option value="sarah">Sarah Perera</option>
               <option value="michael">Michael Fernando</option>
@@ -103,6 +126,7 @@
         <button
           type="button"
           class="cancel-button"
+          (click)="cancel()"
         >
           Cancel
         </button>

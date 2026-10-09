@@ -1,4 +1,3 @@
-```css
 .incident-details-page {
   padding: 8px;
 }
@@ -12,17 +11,28 @@
 }
 
 .back-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 14px;
   color: #1976d2;
   font-size: 13px;
+  font-weight: 500;
   text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.back-link:hover {
+  color: #1565c0;
+  transform: translateX(-2px);
 }
 
 .page-header h1 {
   margin: 0 0 8px;
   font-size: 26px;
   color: #111827;
+  font-weight: 700;
 }
 
 .page-header p {
@@ -38,27 +48,44 @@
 
 .primary-button,
 .secondary-button {
-  padding: 10px 16px;
+  padding: 10px 18px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .primary-button {
   border: none;
   background: #1976d2;
   color: white;
+  box-shadow: 0 1px 2px rgba(25, 118, 210, 0.2);
 }
 
-.primary-button:hover {
+.primary-button:hover:not(:disabled) {
   background: #1565c0;
+  box-shadow: 0 4px 6px -1px rgba(25, 118, 210, 0.3);
+}
+
+.primary-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .secondary-button {
   border: 1px solid #d1d5db;
   background: white;
   color: #374151;
+}
+
+.secondary-button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
 .details-grid {
@@ -79,6 +106,7 @@
   margin: 0 0 24px;
   font-size: 18px;
   color: #111827;
+  font-weight: 600;
 }
 
 .detail-item {
@@ -96,6 +124,8 @@
   font-size: 12px;
   font-weight: 600;
   color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .detail-item p {
@@ -116,20 +146,56 @@
   margin: 0;
 }
 
+/* Priority & Status Badges */
 .priority,
 .status,
 .sla-status {
   display: inline-block;
-  padding: 6px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
+  text-transform: capitalize;
 }
 
-.priority.critical,
+.priority.critical {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.priority.high {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.priority.medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.priority.low {
+  background: #e0f2fe;
+  color: #075985;
+}
+
 .status.open {
   background: #fee2e2;
   color: #b91c1c;
+}
+
+.status.investigating {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status.resolved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.closed {
+  background: #f3f4f6;
+  color: #374151;
 }
 
 .sla-status {
@@ -148,6 +214,10 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
+.comment:last-of-type {
+  border-bottom: 1px solid #f0f0f0;
+}
+
 .comment-avatar {
   width: 38px;
   height: 38px;
@@ -159,6 +229,7 @@
   background: #e3f2fd;
   color: #1976d2;
   font-weight: 700;
+  font-size: 14px;
 }
 
 .comment-content {
@@ -191,6 +262,12 @@
   color: #4b5563;
 }
 
+.empty-comment-text {
+  color: #9ca3af;
+  font-size: 13px;
+  margin: 12px 0 20px;
+}
+
 .comment-form {
   margin-top: 24px;
 }
@@ -205,6 +282,189 @@
   border-radius: 8px;
   resize: vertical;
   font: inherit;
+  font-size: 13px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.comment-form textarea:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.modal-dialog {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.2s ease-out;
+  overflow: hidden;
+}
+
+.modal-dialog-sm {
+  max-width: 480px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.15s ease;
+}
+
+.close-btn:hover {
+  color: #1f2937;
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-control {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+}
+
+.current-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.status-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.15s ease;
+}
+
+.status-option input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.status-option:hover {
+  border-color: #9ca3af;
+  background: #f9fafb;
+}
+
+.status-option.selected {
+  border-color: #1976d2;
+  background: #eff6ff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 768px) {
@@ -228,5 +488,12 @@
   .header-actions {
     width: 100%;
   }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .status-options-grid {
+    grid-template-columns: 1fr;
+  }
 }
-```

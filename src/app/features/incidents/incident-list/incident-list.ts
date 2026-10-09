@@ -1,7 +1,7 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Incident } from '../../../core/models/incident.model';
 import { RouterLink } from '@angular/router';
+import { IncidentService } from '../../../core/services/incident.service';
 
 @Component({
   selector: 'app-incident-list',
@@ -10,60 +10,14 @@ import { RouterLink } from '@angular/router';
   styleUrl: './incident-list.css',
 })
 export class IncidentList {
+  private incidentService = inject(IncidentService);
+
   searchTerm = signal<string>('');
   selectedPriority = signal<string>('');
   selectedStatus = signal<string>('');
 
-  incidents = signal<Incident[]>([
-    {
-      id: 'INC-00124',
-      title: 'Database connection failure',
-      priority: 'critical',
-      status: 'open',
-      assignee: 'John Silva',
-      createdAt: 'Oct 08, 2026',
-    },
-    {
-      id: 'INC-00123',
-      title: 'API response timeout',
-      priority: 'high',
-      status: 'investigating',
-      assignee: 'Sarah Perera',
-      createdAt: 'Oct 08, 2026',
-    },
-    {
-      id: 'INC-00122',
-      title: 'Authentication service error',
-      priority: 'medium',
-      status: 'resolved',
-      assignee: 'Michael Fernando',
-      createdAt: 'Oct 07, 2026',
-    },
-    {
-      id: 'INC-00121',
-      title: 'Server CPU usage high',
-      priority: 'low',
-      status: 'closed',
-      assignee: 'David Perera',
-      createdAt: 'Oct 07, 2026',
-    },
-    {
-      id: 'INC-00120',
-      title: 'Payment gateway latency spike',
-      priority: 'critical',
-      status: 'investigating',
-      assignee: 'Kamal Gunaratne',
-      createdAt: 'Oct 06, 2026',
-    },
-    {
-      id: 'INC-00119',
-      title: 'Email notification service delayed',
-      priority: 'medium',
-      status: 'open',
-      assignee: 'Nimali Jayawardena',
-      createdAt: 'Oct 06, 2026',
-    },
-  ]);
+  incidents = this.incidentService.incidents;
+
 
   filteredIncidents = computed(() => {
     const search = this.searchTerm().toLowerCase().trim();
