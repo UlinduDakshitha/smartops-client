@@ -4,6 +4,7 @@ import { Dashboard } from './features/dashboard/dashboard/dashboard';
 import { IncidentList } from './features/incidents/incident-list/incident-list';
 import { CreateIncident } from './features/incidents/create-incident/create-incident';
  import { IncidentDetails } from './features/incidents/incident-details/incident-details';
+ import { TeamList } from './features/teams/team-list/team-list';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,7 @@ export const routes: Routes = [
   path: 'incidents',
   component: IncidentList,
 },
+{ path: 'teams', component: TeamList },
     ],
   },
 ];

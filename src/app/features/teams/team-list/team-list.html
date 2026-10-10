@@ -1,0 +1,293 @@
+<div class="teams-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Teams</h1>
+      <p>Manage your IT support teams and their members.</p>
+    </div>
+
+    <button class="primary-button" type="button" (click)="openCreateModal()">
+      + Create Team
+    </button>
+  </div>
+
+  <div class="teams-summary">
+
+    <div class="summary-card">
+      <span class="summary-label">Total Teams</span>
+      <h2>{{ totalTeamsCount() }}</h2>
+      <p>All registered teams</p>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Total Members</span>
+      <h2>{{ totalMembersCount() }}</h2>
+      <p>Across all teams</p>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Active Teams</span>
+      <h2>{{ activeTeamsCount() }}</h2>
+      <p>Currently operational</p>
+    </div>
+
+  </div>
+
+  <div class="teams-section">
+
+    <div class="section-header">
+      <h2>All Teams</h2>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search teams..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+      />
+    </div>
+
+    <div class="teams-grid">
+
+      @for (team of filteredTeams(); track team.id) {
+        <div class="team-card">
+          <div class="team-card-header">
+            <div class="team-avatar">{{ team.avatar }}</div>
+            <span
+              class="status"
+              [class.active-status]="team.status === 'active'"
+              [class.inactive-status]="team.status === 'inactive'"
+            >
+              {{ team.status === 'active' ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+          <h3>{{ team.name }}</h3>
+          <p>{{ team.description }}</p>
+          <div class="team-meta">
+            <span>Members</span>
+            <strong>{{ team.membersCount }}</strong>
+          </div>
+          <button class="view-button" type="button" (click)="openViewModal(team)">
+            View Team
+          </button>
+        </div>
+      } @empty {
+        <div class="empty-teams">
+          <p>No teams found matching "{{ searchTerm() }}".</p>
+        </div>
+      }
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Create Team Modal -->
+@if (isCreateModalOpen()) {
+  <div class="modal-backdrop" (click)="closeCreateModal()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Create New Team</h3>
+        <button type="button" class="close-btn" (click)="closeCreateModal()">&times;</button>
+      </div>
+
+      <form (ngSubmit)="saveNewTeam()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="team-name">Team Name</label>
+            <input
+              id="team-name"
+              type="text"
+              class="form-control"
+              placeholder="e.g. Cloud Operations Team"
+              [ngModel]="newTeamName()"
+              (ngModelChange)="newTeamName.set($event)"
+              name="teamName"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="team-lead">Team Lead</label>
+            <input
+              id="team-lead"
+              type="text"
+              class="form-control"
+              placeholder="e.g. Kasun Bandara"
+              [ngModel]="newTeamLead()"
+              (ngModelChange)="newTeamLead.set($event)"
+              name="teamLead"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="team-status">Status</label>
+            <select
+              id="team-status"
+              class="form-control"
+              [ngModel]="newTeamStatus()"
+              (ngModelChange)="newTeamStatus.set($event)"
+              name="teamStatus"
+            >
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="team-desc">Description</label>
+            <textarea
+              id="team-desc"
+              class="form-control"
+              rows="3"
+              placeholder="Describe the team's key duties and scope..."
+              [ngModel]="newTeamDescription()"
+              (ngModelChange)="newTeamDescription.set($event)"
+              name="teamDesc"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="secondary-button" (click)="closeCreateModal()">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="primary-button"
+            [disabled]="!newTeamName().trim()"
+          >
+            Create Team
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- View Team Modal -->
+@if (isViewModalOpen() && selectedTeam(); as team) {
+  <div class="modal-backdrop" (click)="closeViewModal()">
+    <div class="modal-dialog modal-dialog-lg" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="team-avatar-lg">{{ team.avatar }}</div>
+          <div>
+            <h3>{{ team.name }}</h3>
+            <span
+              class="status"
+              [class.active-status]="team.status === 'active'"
+              [class.inactive-status]="team.status === 'inactive'"
+            >
+              {{ team.status === 'active' ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+        </div>
+        <button type="button" class="close-btn" (click)="closeViewModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="team-detail-section">
+          <h4>About Team</h4>
+          <p class="team-detail-desc">{{ team.description }}</p>
+        </div>
+
+        <div class="team-info-grid">
+          <div class="info-pill">
+            <span class="info-label">Team Lead</span>
+            <strong>{{ team.lead || 'Not assigned' }}</strong>
+          </div>
+          <div class="info-pill">
+            <span class="info-label">Total Members</span>
+            <strong>{{ team.membersCount }} Members</strong>
+          </div>
+          <div class="info-pill">
+            <span class="info-label">Operational Status</span>
+            <strong>{{ team.status === 'active' ? 'Operational' : 'Paused' }}</strong>
+          </div>
+        </div>
+
+        <div class="members-section">
+          <div class="members-header">
+            <h4>Team Members ({{ team.members?.length || 0 }})</h4>
+            <button
+              type="button"
+              class="add-member-toggle-btn"
+              (click)="toggleAddMember()"
+            >
+              {{ isAddMemberOpen() ? '− Cancel' : '+ Add Member' }}
+            </button>
+          </div>
+
+          <!-- Add Member Inline Box -->
+          @if (isAddMemberOpen()) {
+            <div class="add-member-box">
+              <h5>Add New Member to {{ team.name }}</h5>
+              <div class="member-form-row">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Full Name (e.g. Nimal Perera)"
+                  [ngModel]="newMemberName()"
+                  (ngModelChange)="newMemberName.set($event)"
+                />
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Role (e.g. SRE Engineer)"
+                  [ngModel]="newMemberRole()"
+                  (ngModelChange)="newMemberRole.set($event)"
+                />
+              </div>
+              <div class="member-form-row">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Email address"
+                  [ngModel]="newMemberEmail()"
+                  (ngModelChange)="newMemberEmail.set($event)"
+                />
+                <button
+                  type="button"
+                  class="primary-button add-member-save-btn"
+                  [disabled]="!newMemberName().trim()"
+                  (click)="saveMember()"
+                >
+                  Save Member
+                </button>
+              </div>
+            </div>
+          }
+
+          <!-- Member Roster List -->
+          <div class="member-list">
+            @for (member of team.members; track member.id) {
+              <div class="member-item">
+                <div class="member-avatar">{{ member.avatar }}</div>
+                <div class="member-info">
+                  <div class="member-name">{{ member.name }}</div>
+                  <div class="member-email">{{ member.email }}</div>
+                </div>
+                <span class="member-role">{{ member.role }}</span>
+              </div>
+            } @empty {
+              <p class="no-members">No team members assigned yet.</p>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="toggleTeamStatus(team)"
+        >
+          Mark as {{ team.status === 'active' ? 'Inactive' : 'Active' }}
+        </button>
+        <button type="button" class="primary-button" (click)="closeViewModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+}
