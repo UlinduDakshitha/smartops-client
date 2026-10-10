@@ -6,6 +6,7 @@ import { CreateIncident } from './features/incidents/create-incident/create-inci
 import { IncidentDetails } from './features/incidents/incident-details/incident-details';
 import { TeamList } from './features/teams/team-list/team-list';
 import { UserList } from './features/users/user-list/user-list';
+import { SlaList } from './features/sla/sla-list/sla-list';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,8 @@ export const routes: Routes = [
         path: 'users',
         component: UserList,
       },
+
+      { path: 'sla', component: SlaList },
     ],
   },
 ];

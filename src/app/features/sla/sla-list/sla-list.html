@@ -1,0 +1,271 @@
+<div class="sla-page">
+
+  <div class="page-header">
+    <div>
+      <h1>SLA Policies</h1>
+      <p>Manage service level agreements and incident response targets.</p>
+    </div>
+
+    <button class="primary-button" type="button" (click)="openCreateForm()">
+      + Create Policy
+    </button>
+  </div>
+
+  <div class="sla-summary">
+    <div class="summary-card">
+      <span class="summary-label">Total Policies</span>
+      <h2>{{ policies.length }}</h2>
+      <p>Configured SLA policies</p>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Active Policies</span>
+      <h2>{{ activePolicies }}</h2>
+      <p>Currently enabled policies</p>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Priorities Covered</span>
+      <h2>4</h2>
+      <p>Critical, High, Medium and Low</p>
+    </div>
+  </div>
+
+  <div class="sla-section">
+    <div class="section-header">
+      <h2>All SLA Policies</h2>
+
+      <select class="filter-select" [(ngModel)]="selectedPriority">
+        <option value="">All Priorities</option>
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="sla-table">
+        <thead>
+          <tr>
+            <th>Policy Name</th>
+            <th>Priority</th>
+            <th>Response Time</th>
+            <th>Resolution Time</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (policy of filteredPolicies; track policy.id) {
+            <tr>
+              <td>
+                <div class="policy-name-cell">
+                  <strong>{{ policy.name }}</strong>
+                  <span class="policy-description">{{ policy.description }}</span>
+                </div>
+              </td>
+
+              <td>
+                <span class="priority" [class]="policy.priority.toLowerCase()">
+                  {{ policy.priority }}
+                </span>
+              </td>
+
+              <td>
+                {{ policy.responseTime }} minutes
+              </td>
+
+              <td>
+                {{ policy.resolutionTime }} minutes
+              </td>
+
+              <td>
+                <span
+                  class="status"
+                  [class.active]="policy.active"
+                  [class.inactive]="!policy.active"
+                >
+                  {{ policy.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+
+              <td>
+                <button
+                  class="view-button"
+                  type="button"
+                  (click)="viewPolicy(policy)"
+                >
+                  View
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">
+                No SLA policies found for this priority.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sla-note">
+    <strong>Note:</strong>
+    These are sample SLA policies for frontend development.
+    Actual policies will be connected to the backend later.
+  </div>
+
+</div>
+
+<!-- Create Policy Modal -->
+@if (showCreateForm) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div
+      class="sla-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-policy-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <h2 id="create-policy-title">Create SLA Policy</h2>
+        <button class="close-button" type="button" (click)="closeModal()">×</button>
+      </div>
+
+      <form #policyForm="ngForm" (ngSubmit)="createPolicy()">
+        <label for="policyName">Policy Name</label>
+        <input
+          id="policyName"
+          name="name"
+          [(ngModel)]="newPolicy.name"
+          placeholder="Enter policy name"
+          required
+        />
+
+        <label for="policyDescription">Description</label>
+        <textarea
+          id="policyDescription"
+          name="description"
+          [(ngModel)]="newPolicy.description"
+          placeholder="Describe this SLA policy"
+          rows="3"
+          required
+        ></textarea>
+
+        <label for="policyPriority">Priority</label>
+        <select
+          id="policyPriority"
+          name="priority"
+          [(ngModel)]="newPolicy.priority"
+          required
+        >
+          <option value="Critical">Critical</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+
+        <label for="responseTime">Response Time (minutes)</label>
+        <input
+          id="responseTime"
+          name="responseTime"
+          type="number"
+          min="1"
+          [(ngModel)]="newPolicy.responseTime"
+          required
+        />
+
+        <label for="resolutionTime">Resolution Time (minutes)</label>
+        <input
+          id="resolutionTime"
+          name="resolutionTime"
+          type="number"
+          min="1"
+          [(ngModel)]="newPolicy.resolutionTime"
+          required
+        />
+
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            name="active"
+            [(ngModel)]="newPolicy.active"
+          />
+          Active policy
+        </label>
+
+        <div class="modal-actions">
+          <button class="cancel-button" type="button" (click)="closeModal()">
+            Cancel
+          </button>
+
+          <button
+            class="primary-button"
+            type="submit"
+            [disabled]="policyForm.invalid || newPolicy.responseTime < 1 || newPolicy.resolutionTime < 1"
+          >
+            Create Policy
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- View Policy Modal -->
+@if (selectedPolicy; as policy) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div
+      class="sla-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="policy-details-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <h2 id="policy-details-title">SLA Policy Details</h2>
+        <button class="close-button" type="button" (click)="closeModal()">×</button>
+      </div>
+
+      <div class="details-avatar">SLA</div>
+
+      <h3 class="details-name">{{ policy.name }}</h3>
+      <p class="details-description">{{ policy.description }}</p>
+
+      <div class="details-row">
+        <span>Policy ID</span>
+        <strong>{{ policy.id }}</strong>
+      </div>
+
+      <div class="details-row">
+        <span>Priority</span>
+        <strong>{{ policy.priority }}</strong>
+      </div>
+
+      <div class="details-row">
+        <span>Response Time</span>
+        <strong>{{ policy.responseTime }} minutes</strong>
+      </div>
+
+      <div class="details-row">
+        <span>Resolution Time</span>
+        <strong>{{ policy.resolutionTime }} minutes</strong>
+      </div>
+
+      <div class="details-row">
+        <span>Status</span>
+        <strong>{{ policy.active ? 'Active' : 'Inactive' }}</strong>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-button" type="button" (click)="closeModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+}
