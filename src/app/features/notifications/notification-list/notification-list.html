@@ -1,1 +1,142 @@
-<p>notification-list works!</p>
+<div class="notifications-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Notifications</h1>
+      <p>Stay updated on incidents, assignments and SLA alerts.</p>
+    </div>
+
+    <button
+      class="secondary-button"
+      type="button"
+      (click)="markAllAsRead()"
+    >
+      Mark all as read
+    </button>
+  </div>
+
+  <div class="notification-summary">
+
+    <div class="summary-card">
+      <span class="summary-label">Total Notifications</span>
+      <h2>{{ notifications.length }}</h2>
+      <p>All recent notifications</p>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Unread</span>
+      <h2>{{ unreadCount }}</h2>
+      <p>Need your attention</p>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Critical Alerts</span>
+      <h2>{{ criticalCount }}</h2>
+      <p>Critical incident alerts</p>
+    </div>
+
+  </div>
+
+  <div class="notifications-section">
+
+    <div class="section-header">
+      <h2>All Notifications</h2>
+
+      <div class="notification-filters">
+        <select
+          class="filter-select"
+          [(ngModel)]="selectedFilter"
+        >
+          <option value="All">All Notifications</option>
+          <option value="Unread">Unread</option>
+          <option value="Read">Read</option>
+        </select>
+
+        <select
+          class="filter-select"
+          [(ngModel)]="selectedType"
+        >
+          <option value="All">All Types</option>
+          <option value="Incident">Incident</option>
+          <option value="Assignment">Assignment</option>
+          <option value="SLA">SLA Alert</option>
+          <option value="System">System</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="notification-list">
+
+      @for (notification of filteredNotifications; track notification.id) {
+        <div
+          class="notification-item"
+          [class.unread]="!notification.read"
+        >
+          <div
+            class="notification-icon"
+            [class.incident-icon]="notification.type === 'Incident'"
+            [class.assignment-icon]="notification.type === 'Assignment'"
+            [class.sla-icon]="notification.type === 'SLA'"
+            [class.system-icon]="notification.type === 'System'"
+          >
+            @switch (notification.type) {
+              @case ('Incident') { ⚠ }
+              @case ('Assignment') { 👤 }
+              @case ('SLA') { ⏱ }
+              @case ('System') { ⚙ }
+            }
+          </div>
+
+          <div class="notification-content">
+            <div class="notification-title-row">
+              <h3>{{ notification.title }}</h3>
+
+              @if (!notification.read) {
+                <span class="unread-dot" aria-label="Unread"></span>
+              }
+            </div>
+
+            <p>{{ notification.message }}</p>
+
+            <div class="notification-meta">
+              <span class="type-badge">{{ notification.type }}</span>
+              <span>{{ notification.time }}</span>
+            </div>
+          </div>
+
+          <div class="notification-actions">
+            @if (!notification.read) {
+              <button
+                class="action-button"
+                type="button"
+                (click)="markAsRead(notification.id)"
+              >
+                Mark read
+              </button>
+            } @else {
+              <span class="read-label">Read</span>
+            }
+
+            <button
+              class="delete-button"
+              type="button"
+              aria-label="Delete notification"
+              (click)="deleteNotification(notification.id)"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <div class="empty-icon">🔔</div>
+          <h3>No notifications found</h3>
+          <p>There are no notifications matching your selected filters.</p>
+        </div>
+      }
+
+    </div>
+
+  </div>
+
+</div>

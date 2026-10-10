@@ -7,7 +7,7 @@ import { IncidentDetails } from './features/incidents/incident-details/incident-
 import { TeamList } from './features/teams/team-list/team-list';
 import { UserList } from './features/users/user-list/user-list';
 import { SlaList } from './features/sla/sla-list/sla-list';
-
+import { NotificationList } from './features/notifications/notification-list/notification-list';
 export const routes: Routes = [
   {
     path: '',
@@ -39,6 +39,8 @@ export const routes: Routes = [
       },
 
       { path: 'sla', component: SlaList },
+
+      { path: 'notifications', component: NotificationList },
     ],
   },
 ];
