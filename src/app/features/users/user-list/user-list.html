@@ -1,4 +1,3 @@
-```html
 <div class="users-page">
 
   <div class="page-header">
@@ -7,35 +6,32 @@
       <p>Manage system users, roles and account status.</p>
     </div>
 
-    <button class="primary-button" type="button">
+    <button class="primary-button" type="button" (click)="openAddForm()">
       + Add User
     </button>
   </div>
 
   <div class="users-summary">
-
     <div class="summary-card">
       <span class="summary-label">Total Users</span>
-      <h2>24</h2>
+      <h2>{{ users.length }}</h2>
       <p>Registered accounts</p>
     </div>
 
     <div class="summary-card">
       <span class="summary-label">Active Users</span>
-      <h2>21</h2>
+      <h2>{{ activeUsers }}</h2>
       <p>Currently active</p>
     </div>
 
     <div class="summary-card">
       <span class="summary-label">Administrators</span>
-      <h2>3</h2>
+      <h2>{{ administrators }}</h2>
       <p>Users with admin access</p>
     </div>
-
   </div>
 
   <div class="users-section">
-
     <div class="section-header">
       <h2>All Users</h2>
 
@@ -43,17 +39,18 @@
         <input
           type="text"
           class="search-input"
-          placeholder="Search users..."
+          placeholder="Search by name or email..."
+          [(ngModel)]="searchTerm"
         />
 
-        <select class="filter-select">
+        <select class="filter-select" [(ngModel)]="selectedRole">
           <option value="">All Roles</option>
           <option value="Administrator">Administrator</option>
           <option value="Engineer">Engineer</option>
           <option value="Technician">Technician</option>
         </select>
 
-        <select class="filter-select">
+        <select class="filter-select" [(ngModel)]="selectedStatus">
           <option value="">All Statuses</option>
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
@@ -75,95 +72,209 @@
         </thead>
 
         <tbody>
-          <tr>
-            <td>
-              <div class="user-cell">
-                <div class="user-avatar">US</div>
-                <div>
-                  <strong>Ulindu Bandara</strong>
-                  <span>ulindu@smartops.com</span>
+          @for (user of filteredUsers; track user.id) {
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">{{ user.name.charAt(0) }}</div>
+                  <div>
+                    <strong>{{ user.name }}</strong>
+                    <span>{{ user.email }}</span>
+                  </div>
                 </div>
-              </div>
-            </td>
-            <td><span class="role-badge admin-role">Administrator</span></td>
-            <td>DevOps Team</td>
-            <td><span class="status active-status">Active</span></td>
-            <td>Oct 01, 2026</td>
-            <td><button class="view-button" type="button">View</button></td>
-          </tr>
+              </td>
 
-          <tr>
-            <td>
-              <div class="user-cell">
-                <div class="user-avatar avatar-purple">JS</div>
-                <div>
-                  <strong>John Silva</strong>
-                  <span>john@smartops.com</span>
-                </div>
-              </div>
-            </td>
-            <td><span class="role-badge engineer-role">Engineer</span></td>
-            <td>DevOps Team</td>
-            <td><span class="status active-status">Active</span></td>
-            <td>Oct 02, 2026</td>
-            <td><button class="view-button" type="button">View</button></td>
-          </tr>
+              <td>
+                <span
+                  class="role-badge"
+                  [class.admin-role]="user.role === 'Administrator'"
+                  [class.engineer-role]="user.role === 'Engineer'"
+                  [class.technician-role]="user.role === 'Technician'"
+                >
+                  {{ user.role }}
+                </span>
+              </td>
 
-          <tr>
-            <td>
-              <div class="user-cell">
-                <div class="user-avatar avatar-orange">SP</div>
-                <div>
-                  <strong>Sarah Perera</strong>
-                  <span>sarah@smartops.com</span>
-                </div>
-              </div>
-            </td>
-            <td><span class="role-badge engineer-role">Engineer</span></td>
-            <td>Backend Team</td>
-            <td><span class="status active-status">Active</span></td>
-            <td>Oct 03, 2026</td>
-            <td><button class="view-button" type="button">View</button></td>
-          </tr>
+              <td>{{ user.team }}</td>
 
-          <tr>
-            <td>
-              <div class="user-cell">
-                <div class="user-avatar avatar-green">MF</div>
-                <div>
-                  <strong>Michael Fernando</strong>
-                  <span>michael@smartops.com</span>
-                </div>
-              </div>
-            </td>
-            <td><span class="role-badge technician-role">Technician</span></td>
-            <td>Network Team</td>
-            <td><span class="status inactive-status">Inactive</span></td>
-            <td>Oct 04, 2026</td>
-            <td><button class="view-button" type="button">View</button></td>
-          </tr>
+              <td>
+                <span
+                  class="status"
+                  [class.active-status]="user.status === 'Active'"
+                  [class.inactive-status]="user.status === 'Inactive'"
+                >
+                  {{ user.status }}
+                </span>
+              </td>
 
-          <tr>
-            <td>
-              <div class="user-cell">
-                <div class="user-avatar avatar-red">DP</div>
-                <div>
-                  <strong>David Perera</strong>
-                  <span>david@smartops.com</span>
-                </div>
-              </div>
-            </td>
-            <td><span class="role-badge technician-role">Technician</span></td>
-            <td>Help Desk</td>
-            <td><span class="status active-status">Active</span></td>
-            <td>Oct 05, 2026</td>
-            <td><button class="view-button" type="button">View</button></td>
-          </tr>
+              <td>{{ user.joinedDate }}</td>
+
+              <td>
+                <button
+                  class="view-button"
+                  type="button"
+                  (click)="viewUser(user)"
+                >
+                  View
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">
+                No users found matching your search or filters.
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
-
   </div>
 
 </div>
-```
+
+<!-- Add User Modal -->
+@if (showAddForm) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div
+      class="user-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="add-user-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <h2 id="add-user-title">Add New User</h2>
+        <button class="close-button" type="button" (click)="closeModal()">×</button>
+      </div>
+
+      <form #userForm="ngForm" (ngSubmit)="addUser()">
+        <label for="userName">Full Name</label>
+        <input
+          id="userName"
+          name="name"
+          type="text"
+          [(ngModel)]="newUser.name"
+          placeholder="Enter full name"
+          required
+        />
+
+        <label for="userEmail">Email Address</label>
+        <input
+          id="userEmail"
+          name="email"
+          type="email"
+          [(ngModel)]="newUser.email"
+          placeholder="Enter email address"
+          required
+        />
+
+        <label for="userRole">Role</label>
+        <select
+          id="userRole"
+          name="role"
+          [(ngModel)]="newUser.role"
+          required
+        >
+          <option value="Administrator">Administrator</option>
+          <option value="Engineer">Engineer</option>
+          <option value="Technician">Technician</option>
+        </select>
+
+        <label for="userTeam">Team</label>
+        <select
+          id="userTeam"
+          name="team"
+          [(ngModel)]="newUser.team"
+          required
+        >
+          <option value="DevOps Team">DevOps Team</option>
+          <option value="Backend Team">Backend Team</option>
+          <option value="Frontend Team">Frontend Team</option>
+          <option value="Network Team">Network Team</option>
+          <option value="Security Team">Security Team</option>
+          <option value="Help Desk">Help Desk</option>
+        </select>
+
+        <label for="userStatus">Status</label>
+        <select
+          id="userStatus"
+          name="status"
+          [(ngModel)]="newUser.status"
+          required
+        >
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+
+        <div class="modal-actions">
+          <button class="cancel-button" type="button" (click)="closeModal()">
+            Cancel
+          </button>
+
+          <button
+            class="primary-button"
+            type="submit"
+            [disabled]="userForm.invalid"
+          >
+            Add User
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- View User Modal -->
+@if (selectedUser; as user) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div
+      class="user-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="user-details-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <h2 id="user-details-title">User Details</h2>
+        <button class="close-button" type="button" (click)="closeModal()">×</button>
+      </div>
+
+      <div class="details-avatar">{{ user.name.charAt(0) }}</div>
+
+      <h3 class="details-name">{{ user.name }}</h3>
+      <p class="details-email">{{ user.email }}</p>
+
+      <div class="details-row">
+        <span>User ID</span>
+        <strong>{{ user.id }}</strong>
+      </div>
+
+      <div class="details-row">
+        <span>Role</span>
+        <strong>{{ user.role }}</strong>
+      </div>
+
+      <div class="details-row">
+        <span>Assigned Team</span>
+        <strong>{{ user.team }}</strong>
+      </div>
+
+      <div class="details-row">
+        <span>Status</span>
+        <strong>{{ user.status }}</strong>
+      </div>
+
+      <div class="details-row">
+        <span>Joined Date</span>
+        <strong>{{ user.joinedDate }}</strong>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-button" type="button" (click)="closeModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+}
