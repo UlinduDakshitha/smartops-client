@@ -1,0 +1,169 @@
+```html
+<div class="users-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Users</h1>
+      <p>Manage system users, roles and account status.</p>
+    </div>
+
+    <button class="primary-button" type="button">
+      + Add User
+    </button>
+  </div>
+
+  <div class="users-summary">
+
+    <div class="summary-card">
+      <span class="summary-label">Total Users</span>
+      <h2>24</h2>
+      <p>Registered accounts</p>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Active Users</span>
+      <h2>21</h2>
+      <p>Currently active</p>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Administrators</span>
+      <h2>3</h2>
+      <p>Users with admin access</p>
+    </div>
+
+  </div>
+
+  <div class="users-section">
+
+    <div class="section-header">
+      <h2>All Users</h2>
+
+      <div class="user-filters">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search users..."
+        />
+
+        <select class="filter-select">
+          <option value="">All Roles</option>
+          <option value="Administrator">Administrator</option>
+          <option value="Engineer">Engineer</option>
+          <option value="Technician">Technician</option>
+        </select>
+
+        <select class="filter-select">
+          <option value="">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Team</th>
+            <th>Status</th>
+            <th>Joined Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar">US</div>
+                <div>
+                  <strong>Ulindu Bandara</strong>
+                  <span>ulindu@smartops.com</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="role-badge admin-role">Administrator</span></td>
+            <td>DevOps Team</td>
+            <td><span class="status active-status">Active</span></td>
+            <td>Oct 01, 2026</td>
+            <td><button class="view-button" type="button">View</button></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar avatar-purple">JS</div>
+                <div>
+                  <strong>John Silva</strong>
+                  <span>john@smartops.com</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="role-badge engineer-role">Engineer</span></td>
+            <td>DevOps Team</td>
+            <td><span class="status active-status">Active</span></td>
+            <td>Oct 02, 2026</td>
+            <td><button class="view-button" type="button">View</button></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar avatar-orange">SP</div>
+                <div>
+                  <strong>Sarah Perera</strong>
+                  <span>sarah@smartops.com</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="role-badge engineer-role">Engineer</span></td>
+            <td>Backend Team</td>
+            <td><span class="status active-status">Active</span></td>
+            <td>Oct 03, 2026</td>
+            <td><button class="view-button" type="button">View</button></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar avatar-green">MF</div>
+                <div>
+                  <strong>Michael Fernando</strong>
+                  <span>michael@smartops.com</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="role-badge technician-role">Technician</span></td>
+            <td>Network Team</td>
+            <td><span class="status inactive-status">Inactive</span></td>
+            <td>Oct 04, 2026</td>
+            <td><button class="view-button" type="button">View</button></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar avatar-red">DP</div>
+                <div>
+                  <strong>David Perera</strong>
+                  <span>david@smartops.com</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="role-badge technician-role">Technician</span></td>
+            <td>Help Desk</td>
+            <td><span class="status active-status">Active</span></td>
+            <td>Oct 05, 2026</td>
+            <td><button class="view-button" type="button">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+```

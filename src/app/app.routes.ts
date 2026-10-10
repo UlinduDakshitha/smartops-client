@@ -5,6 +5,7 @@ import { IncidentList } from './features/incidents/incident-list/incident-list';
 import { CreateIncident } from './features/incidents/create-incident/create-incident';
  import { IncidentDetails } from './features/incidents/incident-details/incident-details';
  import { TeamList } from './features/teams/team-list/team-list';
+ import { UserList } from './features/users/user-list/user-list';
 
 export const routes: Routes = [
   {
@@ -30,4 +31,6 @@ export const routes: Routes = [
 { path: 'teams', component: TeamList },
     ],
   },
+
+  { path: 'users', component: UserList },
 ];
