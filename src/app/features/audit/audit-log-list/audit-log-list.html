@@ -1,0 +1,121 @@
+<div class="page-header">
+  <div>
+    <h1>Audit Logs</h1>
+    <p>Track user activities and monitor system changes.</p>
+  </div>
+</div>
+
+<div class="summary-cards">
+  <div class="summary-card">
+    <span class="summary-label">Total Activities</span>
+    <h2>248</h2>
+    <span class="summary-description">Recorded activities</span>
+  </div>
+
+  <div class="summary-card">
+    <span class="summary-label">User Logins</span>
+    <h2>86</h2>
+    <span class="summary-description">Authentication events</span>
+  </div>
+
+  <div class="summary-card">
+    <span class="summary-label">Data Changes</span>
+    <h2>124</h2>
+    <span class="summary-description">Create, update and delete</span>
+  </div>
+
+  <div class="summary-card">
+    <span class="summary-label">Security Events</span>
+    <h2>12</h2>
+    <span class="summary-description">Security-related activities</span>
+  </div>
+</div>
+
+<div class="audit-container">
+  <div class="section-header">
+    <div>
+      <h2>Activity History</h2>
+      <p>Review recent activities performed across SmartOps.</p>
+    </div>
+  </div>
+
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search user, activity or entity..."
+      [ngModel]="searchTerm()"
+      (ngModelChange)="searchTerm.set($event)"
+    />
+
+    <select
+      [ngModel]="selectedAction()"
+      (ngModelChange)="selectedAction.set($event)"
+    >
+      <option value="">All Actions</option>
+      <option value="Login">Login</option>
+      <option value="Create">Create</option>
+      <option value="Update">Update</option>
+      <option value="Delete">Delete</option>
+    </select>
+
+    <select
+      [ngModel]="selectedStatus()"
+      (ngModelChange)="selectedStatus.set($event)"
+    >
+      <option value="">All Statuses</option>
+      <option value="Success">Success</option>
+      <option value="Failed">Failed</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>USER</th>
+          <th>ACTION</th>
+          <th>ENTITY</th>
+          <th>DETAILS</th>
+          <th>IP ADDRESS</th>
+          <th>STATUS</th>
+          <th>DATE & TIME</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (log of filteredLogs(); track log.id) {
+          <tr>
+            <td>
+              <strong>{{ log.userName }}</strong>
+              <small>{{ log.userEmail }}</small>
+            </td>
+            <td>
+              <span class="action-badge" [class]="log.action.toLowerCase()">
+                {{ log.action }}
+              </span>
+            </td>
+            <td>{{ log.entity }}</td>
+            <td>{{ log.details }}</td>
+            <td>{{ log.ipAddress }}</td>
+            <td>
+              <span class="status-badge" [class]="log.status.toLowerCase()">
+                {{ log.status }}
+              </span>
+            </td>
+            <td>{{ log.timestamp }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="empty-state">
+              No audit logs found matching your filter criteria.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    Showing {{ filteredLogs().length }} activities
+  </div>
+</div>
